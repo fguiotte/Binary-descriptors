@@ -1,0 +1,1 @@
+/home/bibi/Projet-IN2/Binary-descriptors/opencv/CMakeFiles/BinaryDescriptors.dir
