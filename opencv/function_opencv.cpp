@@ -1,6 +1,6 @@
 #include "function_opencv.h"
 
-vector<vpImagePoint> getKeypointsFromOpenCV(string imagePath)
+vector<vpImagePoint> getKeypointsFromOpenCV(string imagePath,int  threshold)
 {
 	// Iniatialisation de l'image en OpenCV
 	cv::Mat image = cv::imread(imagePath);
@@ -8,7 +8,7 @@ vector<vpImagePoint> getKeypointsFromOpenCV(string imagePath)
 	cv::cvtColor(image, gray, CV_BGR2GRAY);
 	cv::vector<cv::KeyPoint> keypoints;
 	// Utilisation de FAST
-	cv::FAST(gray, keypoints, 20);
+	cv::FAST(gray, keypoints, threshold);
 
 	// Conversion des Keypoints d'OpenCV vers ViSP
 	vector<vpImagePoint> vpKeypoints;

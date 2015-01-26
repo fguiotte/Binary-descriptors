@@ -4,4 +4,4 @@
 
 using namespace std;
 
-vector<vpImagePoint> getKeypointsFromOpenCV(string imagePath);
+vector<vpImagePoint> getKeypointsFromOpenCV(string imagePath,int threshold);

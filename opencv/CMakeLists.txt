@@ -6,7 +6,7 @@ find_package (OpenCV REQUIRED)
 find_package (VISP REQUIRED)
 
 set(${PROJECT_NAME}_CPP
-	main.cpp
+  main.cpp
 	function_opencv.cpp
 )
 set(${PROJET_NAME}_H

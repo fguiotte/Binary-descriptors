@@ -21,11 +21,7 @@ int main(int argc, char** argv)
 	FAST(gray, keypoints, 30);*/
 	vpImage<vpRGBa> img;
 	vpImageIo::read(img, adresse_image);
-	vpDisplayX image(img, 100, 100);
-	vpDisplay::display(img);
-	vpDisplay::flush(img);
-	vpDisplay::getClick(img);
-	vector<vpImagePoint> keypoints = getKeypointsFromOpenCV(adresse_image);
+	vector<vpImagePoint> keypoints = getKeypointsFromOpenCV(adresse_image, 30);
 
 	for(size_t i = 0; i < keypoints.size(); i++)
 	{
