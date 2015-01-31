@@ -6,10 +6,10 @@ find_package (VISP REQUIRED)
 
 set(${PROJECT_NAME}_CPP
   main.cpp
-	vpFast.cpp
+	vpGetKeypointFast.cpp
 )
 set(${PROJET_NAME}_H
-	vpFast.h
+	vpGetKeypointFast.h
 )
 
 add_executable(${PROJECT_NAME}
