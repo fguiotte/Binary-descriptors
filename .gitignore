@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+# Directories
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+
+# Editors
+*~
+*.sw?
+*.directory
