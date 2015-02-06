@@ -5,11 +5,13 @@ project(BinaryDescriptors)
 find_package (VISP REQUIRED)
 
 set(${PROJECT_NAME}_CPP
-  main.cpp
+	main.cpp
 	vpGetKeypointFast.cpp
+	vpFast.cpp
 )
 set(${PROJET_NAME}_H
 	vpGetKeypointFast.h
+	vpFast.h
 )
 
 add_executable(${PROJECT_NAME}
