@@ -14,11 +14,17 @@ int main(int argc, char** argv)
 	string imagePath;
 	cin >> imagePath;
 
-	vpImage<vpRGBa> img;
-	vpImageIo::read(img, imagePath);
+	vpImage<unsigned char> imgSource;
+	vpImageIo::read(imgSource, imagePath);
+	
+	int threshold=30;
 	
 	// récupération des points d'intérèts dans un vecteur
-	vector<vpImagePoint> keypoints = vpGetKeypointFromFast(img, 30);
+	vector<vpImagePoint> keypoints = vpGetKeypointFromFast(imgSource, threshold);
+
+
+	vpImage<vpRGBa> img;
+	vpImageIo::read(img, imagePath);
 	
 	for(size_t i = 0; i < keypoints.size(); i++)
 	{

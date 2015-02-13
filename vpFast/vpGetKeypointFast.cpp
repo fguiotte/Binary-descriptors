@@ -1,22 +1,27 @@
 #include "vpGetKeypointFast.h"
 
-vector<vpImagePoint> vpGetKeypointFromFast(vpImage<vpRGBa> img,int  threshold)
+vector<vpImagePoint> vpGetKeypointFromFast(vpImage<unsigned char> img,int  threshold)
 {
 	bool kp;
-	int n=0;
+
+	int h=img.getHeight();
+	int w=img.getWidth();
+
 	vector<vpImagePoint> vpKeypoints;
-	// Utilisation de FAST
-	for (int i=0; i<n; i++)
+	// FAST
+	for (int i=0; i<h; i++)
 	{
-		for (int j=0; j<n; j++){
-			kp=vpFast(img, i, j);
-			if(kp){
-				vpImagePoint point(i,j);
-				vpKeypoints.push_back(point);	
+		for (int j=0; j<w; j++){
+			if(i>4 && i<(h-4)){
+				if(j>4 && j<(w-4)){
+					kp=vpFast(img, i, j,threshold);
+					if(kp){
+						vpImagePoint point(i,j);
+						vpKeypoints.push_back(point);
+					}
+				}
 			}
 		}
 	}
-
-	
 	return vpKeypoints;
 }
