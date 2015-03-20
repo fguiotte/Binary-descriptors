@@ -10,14 +10,15 @@
 #define __VPBRIEF_H__
 
 #include <vector>
+#include <visp/vpImage.h>
 
 class vpBrief {
     public :
-        vpBrief(int nb_pairs=100);
+        vpBrief(vpImage<unsigned char> init_im, int nb_pairs=100);
         ~vpBrief();
 
     private :
-        std::pair<int,int> * pairs;
+        int * pairs;
         int nb_pairs;
 };
 
