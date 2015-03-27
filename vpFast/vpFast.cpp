@@ -1,6 +1,6 @@
 #include "vpFast.h"
 
-bool vpFast(vpImage<unsigned char> img, int i,int j, int threshold){
+bool vpFast(vpImage<unsigned char> &img, int i,int j, int threshold){
 	int north,south,east,west;
 
 	int base=img[i][j];
