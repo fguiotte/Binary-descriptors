@@ -10,14 +10,12 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	cout << "Veuillez entrer l'adresse de l'image à traiter: " << endl;
-	string imagePath;
-	cin >> imagePath;
+	string imagePath = "truc.pgm";
 
 	vpImage<unsigned char> imgSource;
 	vpImageIo::read(imgSource, imagePath);
 	
-	int threshold=30;
+	const int threshold=30;
 	
 	// récupération des points d'intérèts dans un vecteur
 	vector<vpImagePoint> keypoints = vpGetKeypointFromFast(imgSource, threshold);
@@ -36,6 +34,7 @@ int main(int argc, char** argv)
 		img[(int)kp.get_i()][(int)kp.get_j()+1] = red;
 		img[(int)kp.get_i()+1][(int)kp.get_j()] = red;
 	}
+
 
 	vpDisplayX d(img);
 	vpDisplay::display(img);

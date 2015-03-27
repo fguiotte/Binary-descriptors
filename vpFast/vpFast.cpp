@@ -1,6 +1,6 @@
 #include "vpFast.h"
 
-bool vpFast(vpImage<unsigned char> img, int i,int j, int threshold){
+bool vpFast(vpImage<unsigned char> &img, int i,int j, int threshold){
 	int north,south,east,west;
 
 	int base=img[i][j];
@@ -9,9 +9,9 @@ bool vpFast(vpImage<unsigned char> img, int i,int j, int threshold){
 
 	south= img[i+3][j];
 
-	east= img[i][j-3];
+	east= img[i][j+3];
 
-	west= img[i][j+3];
+	west= img[i][j-3];
 
 	//We are testing first with cardinals point on the image
 	int primaryTestN = std::abs(north-base);
@@ -47,12 +47,12 @@ bool vpFast(vpImage<unsigned char> img, int i,int j, int threshold){
 
 				N1=img[i-3][j-1];
 				N2=img[i-3][j+1];
-				W1=img[i-1][j+3];
-				W2=img[i+1][j+3];
-				S1=img[i+3][j-1];
-				S2=img[i+3][j+1];
-				E1=img[i-1][j-3];
-				E2=img[i+1][j-3];
+				W1=img[i+1][j-3];
+				W2=img[i-1][j-3];
+				S1=img[i+3][j+1];
+				S2=img[i+3][j-1];
+				E1=img[i-1][j+3];
+				E2=img[i+1][j+3];
 
 				int TestN1 = std::abs(N1-threshold);
 				int TestN2 = std::abs(N2-threshold);
@@ -74,10 +74,23 @@ bool vpFast(vpImage<unsigned char> img, int i,int j, int threshold){
 				if(TestE2>threshold){cpt++;}
 				
 				if(cpt>=12){
-					while (1){
-						int cptIsNeighbor,cptOut;
-					}
-					return true;
+					int indices[16] = { N1, north, N2,NE,E1, east, E2, SE, S1, south, S2, SW,W1,west,W2,NW };
+					int x=0; 					
+					while (x<12){
+						int test = std::abs(indices[i]);
+						if(test<threshold){
+							int y=0;
+							while(y<4){
+								y++;x++;
+								test = std::abs(indices[x]);
+								if(test>threshold){
+									return false;
+								}
+							}
+							return true;
+						}
+						x++;
+					}return true;
 				}
 			}
 		}

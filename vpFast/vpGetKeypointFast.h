@@ -7,4 +7,4 @@
 
 using namespace std;
 
-vector<vpImagePoint> vpGetKeypointFromFast(vpImage<unsigned char> img,int threshold);
+vector<vpImagePoint> vpGetKeypointFromFast(vpImage<unsigned char> &img,int threshold);
