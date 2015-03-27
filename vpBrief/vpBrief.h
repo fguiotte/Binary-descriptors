@@ -14,12 +14,13 @@
 
 class vpBrief {
     public :
-        vpBrief(vpImage<unsigned char> init_im, int nb_pairs=100);
+        vpBrief(int nb_pairs=100, int patch_size=10);
         ~vpBrief();
 
     private :
         int * pairs;
         int nb_pairs;
+        int patch_size;
 };
 
 #endif /* __VPBRIEF_H__ */

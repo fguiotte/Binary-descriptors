@@ -25,11 +25,10 @@ using std::rand;
 //    first pair                                  
 //   
 
-vpBrief::vpBrief(vpImage<unsigned char> init_im, int nb_pairs) : nb_pairs(nb_pairs) { // Image in constructor ? or height/width
+vpBrief::vpBrief(int nb_pairs, int patch_size) : nb_pairs(nb_pairs), patch_size(patch_size) {
     pairs = new int[nb_pairs*4];
     for (int i=0; i<nb_pairs*4; i++)
-        if ( i % 2 != 0 ) pairs[i] = rand() % init_im.getHeight(); // % Image height
-        else pairs[i] = rand() % init_im.getWidth(); // % Image width
+        pairs[i] = rand() % (patch_size * 2 + 1) - patch_size;
 }
 
 vpBrief::~vpBrief() {
