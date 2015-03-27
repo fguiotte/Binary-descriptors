@@ -29,12 +29,7 @@ int main(int argc, char** argv)
 	for(size_t i = 0; i < keypoints.size(); i++)
 	{
 		const vpImagePoint &kp = keypoints[i];
-		vpRGBa red(255,0,0);
-		img[(int)kp.get_i()-1][(int)kp.get_j()]= red;
-		img[(int)kp.get_i()][(int)kp.get_j()-1] = red;
-		img[(int)kp.get_i()][(int)kp.get_j()] = red;
-		img[(int)kp.get_i()][(int)kp.get_j()+1] = red;
-		img[(int)kp.get_i()+1][(int)kp.get_j()] = red;
+		vpDisplay::displayPoint	(img, kp, vpColor::red,1 ); 		
 	}
 
 	vpDisplayX d(img);
