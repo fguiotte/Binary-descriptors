@@ -8,9 +8,11 @@ find_package (VISP REQUIRED)
 set(${PROJECT_NAME}_CPP
   main.cpp
   vpBrief.cpp
+    function_opencv.cpp
 )
 set(${PROJET_NAME}_H
     vpBrief.h
+    function_opencv.h
 )
 
 add_executable(${PROJECT_NAME}
