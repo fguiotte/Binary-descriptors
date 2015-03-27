@@ -12,9 +12,12 @@
 #include <vector>
 #include <visp/vpImage.h>
 
+using std::vector;
+
 class vpBrief {
     public :
-        vpBrief(int nb_pairs=100, int patch_size=10);
+        vpBrief(int nb_pairs=128, int patch_size=10); // Refactor nb_pairs = sizeof(type[n])
+        long double * compute(const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints); // Refactor type[n*]
         ~vpBrief();
 
     private :

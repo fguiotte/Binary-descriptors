@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "function_opencv.h"
+#include "vpBrief.h"
 #include <visp/vpImage.h>
 #include <visp/vpImageIo.h>
 #include <visp/vpDisplayX.h>
@@ -19,9 +20,17 @@ int main( int argc, char* argv[] )
 
 
     vpImage<unsigned char> img;
-    string adresse_image("img.pgm");
+    string adresse_image("lena.pgm");
 	vpImageIo::read(img, adresse_image);
 	vector<vpImagePoint> keypoints = getKeypointsFromOpenCV(adresse_image, 30);
+
+    vpBrief brief;
+
+    std::cout<<"Keypoints : "<<keypoints.size()<<std::endl;
+
+    //long int * tmp[2];
+    //std::cout<<sizeof(long double)<<std::endl;
+    long double * descriptor = brief.compute(img, keypoints);
 
 	vpDisplayX d(img);
 	vpDisplay::display(img);

@@ -31,6 +31,35 @@ vpBrief::vpBrief(int nb_pairs, int patch_size) : nb_pairs(nb_pairs), patch_size(
         pairs[i] = rand() % (patch_size * 2 + 1) - patch_size;
 }
 
+long double * vpBrief::compute(const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
+    long double * descriptor = new long double[keypoints.size()];
+    long double * descriptors = new long double[keypoints.size()];
+
+    int n = 0;
+    for (vector<vpImagePoint>::const_iterator it = keypoints.begin(); it!=keypoints.end(); it++) {
+        descriptors[n] = 0;
+        if (it->get_u() > patch_size && it->get_u() < image.getHeight() - patch_size && it->get_v() > patch_size && it->get_v() < image.getWidth() - patch_size)
+            for (int i=0; i<nb_pairs; i++) {
+                int u1 = it->get_u() + pairs[i*4+0];
+                int v1 = it->get_v() + pairs[i*4+1];
+                int u2 = it->get_u() + pairs[i*4+2];
+                int v2 = it->get_v() + pairs[i*4+3];
+                bool res = (image[u1][v1] > image[u2][v2]);
+                //bool res = (image[it->get_u()+pairs[i*4+0]][it->get_v()+pairs[i*4+1]] - image[pairs[i*4+2]][pairs[i*4+3]]) > 0;
+                //descriptor[n] += res << 1;
+                descriptors[n] += res;
+                descriptors[n] = descriptors[n] * 2;
+            }
+        n++;
+    }
+
+    return descriptor;
+//        for (int i=0; i<image.getHeight(); i++)
+//            for (int j=0; j<image.getWidth(); j++)
+//        for (int k=0;
+//                image[
+}
+
 vpBrief::~vpBrief() {
     delete[] pairs;
 }
