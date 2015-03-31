@@ -33,7 +33,7 @@ vpBrief::vpBrief(int nb_pairs, int patch_size) : nb_pairs(nb_pairs), patch_size(
 
 long double * vpBrief::compute(const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
     long double * descriptor = new long double[keypoints.size()];
-    long double * descriptors = new long double[keypoints.size()];
+    unsigned long * descriptors = new unsigned long[keypoints.size()];
 
     int n = 0;
     for (vector<vpImagePoint>::const_iterator it = keypoints.begin(); it!=keypoints.end(); it++) {
@@ -48,8 +48,18 @@ long double * vpBrief::compute(const vpImage<unsigned char> & image, const vecto
                 //bool res = (image[it->get_u()+pairs[i*4+0]][it->get_v()+pairs[i*4+1]] - image[pairs[i*4+2]][pairs[i*4+3]]) > 0;
                 //descriptor[n] += res << 1;
                 descriptors[n] += res;
-                descriptors[n] = descriptors[n] * 2;
+                descriptors[n] = descriptors[n] << 1;
             }
+            unsigned long x = descriptors[n];
+            for (int k=0; k<sizeof(x)*8; k++) {
+                if (x & 1)
+                    printf("1");
+                else
+                    printf("0");
+
+                x >>= 1;
+            }
+            printf("\n");
         n++;
     }
 

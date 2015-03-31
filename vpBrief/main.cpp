@@ -29,7 +29,7 @@ int main( int argc, char* argv[] )
     std::cout<<"Keypoints : "<<keypoints.size()<<std::endl;
 
     //long int * tmp[2];
-    //std::cout<<sizeof(long double)<<std::endl;
+    std::cout<<sizeof(unsigned long)<<std::endl;
     long double * descriptor = brief.compute(img, keypoints);
 
 	vpDisplayX d(img);
