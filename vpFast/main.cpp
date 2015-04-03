@@ -81,7 +81,7 @@ int main(int argc, char** argv)
     
     vpDisplayX dv(imgSource);
     vpDisplay::setTitle(imgSource, "Video reader");
-    int playSpeed = 2000.0;
+    double playSpeed = 2000.0;
     while( true ) {
     
         double t = vpTime::measureTimeMs();
