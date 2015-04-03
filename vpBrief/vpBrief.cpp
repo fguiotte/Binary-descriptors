@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <bitset>
 #include "vpBrief.h"
 
 using std::rand;
@@ -34,6 +35,10 @@ vpBrief::vpBrief(int nb_pairs, int patch_size) : nb_pairs(nb_pairs), patch_size(
 long double * vpBrief::compute(const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
     long double * descriptor = new long double[keypoints.size()];
     unsigned long * descriptors = new unsigned long[keypoints.size()];
+//    const unsigned long tmp(nb_pairs);
+//    const int inter(nb_pairs);
+//    const std::size_t N(inter);
+    std::bitset<nb_pairs> desc ;//= new std::bitset<nb_pairs>[keypoints.size()];
 
     int n = 0;
     for (vector<vpImagePoint>::const_iterator it = keypoints.begin(); it!=keypoints.end(); it++) {
@@ -47,19 +52,21 @@ long double * vpBrief::compute(const vpImage<unsigned char> & image, const vecto
                 bool res = (image[u1][v1] > image[u2][v2]);
                 //bool res = (image[it->get_u()+pairs[i*4+0]][it->get_v()+pairs[i*4+1]] - image[pairs[i*4+2]][pairs[i*4+3]]) > 0;
                 //descriptor[n] += res << 1;
-                descriptors[n] += res;
-                descriptors[n] = descriptors[n] << 1;
+                desc[0] = res;
+                desc <<= 1;
+                //descriptors[n] = descriptors[n] << 1;
             }
-            unsigned long x = descriptors[n];
-            for (int k=0; k<sizeof(x)*8; k++) {
-                if (x & 1)
-                    printf("1");
-                else
-                    printf("0");
-
-                x >>= 1;
-            }
-            printf("\n");
+            //unsigned long x = descriptors[n];
+            std::cout<<desc<<std::endl;
+//            for (int k=0; k<sizeof(x)*8; k++) {
+//                if (x & 1)
+//                    printf("1");
+//                else
+//                    printf("0");
+//
+//                x >>= 1;
+//            }
+//            printf("\n");
         n++;
     }
 

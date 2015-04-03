@@ -22,8 +22,9 @@ class vpBrief {
 
     private :
         int * pairs;
-        int nb_pairs;
+        const std::size_t nb_pairs;
         int patch_size;
+        //const std::size_t N;
 };
 
 #endif /* __VPBRIEF_H__ */
