@@ -30,7 +30,7 @@ int main( int argc, char* argv[] )
 
     //long int * tmp[2];
     std::cout<<sizeof(unsigned long)<<std::endl;
-    long double * descriptor = brief.compute(img, keypoints);
+    std::bitset<NB_PAIRS> * descriptor = brief.compute(img, keypoints);
 
 	vpDisplayX d(img);
 	vpDisplay::display(img);
