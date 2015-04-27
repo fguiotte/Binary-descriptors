@@ -27,6 +27,7 @@ class vpBrief {
         const int nb_pairs;
         int patch_size;
         //const std::size_t N;
+        void descriptorBit(const vpImage<unsigned char> & image, std::bitset<NB_PAIRS> & descriptor, vector<vpImagePoint>::const_iterator & it, int * pairs, int i);
 };
 
 #endif /* __VPBRIEF_H__ */
