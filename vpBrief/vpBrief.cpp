@@ -41,9 +41,7 @@ void vpBrief::descriptorBit(const vpImage<unsigned char> & image, std::bitset<NB
     descriptor[0] = res;
 }
 
-std::vector<std::bitset<NB_PAIRS> *> * vpBrief::computeDescriptors(const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
-    std::vector<std::bitset<NB_PAIRS> *> * desc = new std::vector<std::bitset<NB_PAIRS> *>;
-
+void vpBrief::computeDescriptors(std::vector<std::bitset<NB_PAIRS> *> & descriptors, const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
     for (vector<vpImagePoint>::const_iterator it = keypoints.begin(); it!=keypoints.end(); it++) {
         std::bitset<NB_PAIRS> * newDescriptor = new std::bitset<NB_PAIRS>;
         *newDescriptor = 0;
@@ -54,9 +52,8 @@ std::vector<std::bitset<NB_PAIRS> *> * vpBrief::computeDescriptors(const vpImage
             }
             descriptorBit(image, *newDescriptor, it, pairs, nb_pairs-1);
         }
-        desc->push_back(newDescriptor);
+        descriptors.push_back(newDescriptor);
     }
-    return desc;
 }
 
 vpBrief::~vpBrief() {
