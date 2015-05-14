@@ -19,6 +19,7 @@ class vpBrief {
         vpBrief(int nb_pairs=NB_PAIRS, int patch_size=10); // Refactor nb_pairs = sizeof(type[n])
         std::vector<std::bitset<NB_PAIRS> *> * computeDescriptors(const vpImage<unsigned char> & image, const std::vector<vpImagePoint> & keypoints); 
         void computeDescriptors(std::vector<std::bitset<NB_PAIRS> *> & descriptors, std::vector<int> & descriptors_state, const vpImage<unsigned char> & image, const std::vector<vpImagePoint> & keypoints); // TODO Refactor take into account user defined nb_pairs (see boost, bitmagic)
+        void match(const vpImage<unsigned char> & first_image, const std::vector<vpImagePoint> & first_keypoints, const vpImage<unsigned char> & second_image, const std::vector<vpImagePoint> & second_keypoints);
 
         ~vpBrief();
 
@@ -28,6 +29,7 @@ class vpBrief {
         int patch_size;
         //const std::size_t N;
         void descriptorBit(const vpImage<unsigned char> & image, std::bitset<NB_PAIRS> & descriptor, std::vector<vpImagePoint>::const_iterator & it, int * pairs, int i);
+        int hamming_distance(const std::bitset<NB_PAIRS> & first, const std::bitset<NB_PAIRS> & second);
 };
 
 #endif /* __VPBRIEF_H__ */

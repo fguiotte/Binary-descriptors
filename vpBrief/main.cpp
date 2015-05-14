@@ -28,6 +28,7 @@ int main( int argc, char* argv[] )
 
     std::cout<<"Keypoints : "<<keypoints.size()<<std::endl;
 
+    /*
     //long int * tmp[2];
     std::cout<<sizeof(unsigned long)<<std::endl;
     vector<std::bitset<NB_PAIRS> *> descriptors;
@@ -37,6 +38,8 @@ int main( int argc, char* argv[] )
         std::cout<<*descriptors[i]<<std::endl;
         std::cout<<descriptors_state[i]<<std::endl;
     }
+    */
+    brief.match(img,keypoints,img,keypoints);
 
 	vpDisplayX d(img);
 	vpDisplay::display(img);
