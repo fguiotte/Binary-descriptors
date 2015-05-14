@@ -11,6 +11,7 @@
 #include "vpBrief.h"
 
 using std::rand;
+using std::vector;
 
 //   
 //                  --- pairs[] ---               
@@ -40,21 +41,20 @@ void vpBrief::descriptorBit(const vpImage<unsigned char> & image, std::bitset<NB
     descriptor[0] = res;
 }
 
-std::bitset<NB_PAIRS> * vpBrief::compute(const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
-    std::bitset<NB_PAIRS> * desc = new std::bitset<NB_PAIRS>[keypoints.size()];
+std::vector<std::bitset<NB_PAIRS> *> * vpBrief::computeDescriptors(const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
+    std::vector<std::bitset<NB_PAIRS> *> * desc = new std::vector<std::bitset<NB_PAIRS> *>;
 
-    int n = 0;
     for (vector<vpImagePoint>::const_iterator it = keypoints.begin(); it!=keypoints.end(); it++) {
-        desc[n] = 0;
-        if (it->get_u() > patch_size && it->get_u() < image.getHeight() - patch_size && it->get_v() > patch_size && it->get_v() < image.getWidth() - patch_size) {
+        std::bitset<NB_PAIRS> * newDescriptor = new std::bitset<NB_PAIRS>;
+        *newDescriptor = 0;
+        if (it->get_u() > patch_size && it->get_u() < image.getHeight() - patch_size && it->get_v() > patch_size && it->get_v() < image.getWidth() - patch_size) { // Border conditions; please refactor
             for (int i=0; i<nb_pairs-1; i++) {
-                descriptorBit(image, desc[n], it, pairs, i);
-                desc[n] <<= 1;
+                descriptorBit(image, *newDescriptor, it, pairs, i);
+                *newDescriptor <<= 1;
             }
-            descriptorBit(image, desc[n], it, pairs, nb_pairs-1);
+            descriptorBit(image, *newDescriptor, it, pairs, nb_pairs-1);
         }
-        std::cout<<desc[n]<<std::endl;
-        n++;
+        desc->push_back(newDescriptor);
     }
     return desc;
 }

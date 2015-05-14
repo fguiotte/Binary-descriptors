@@ -14,12 +14,10 @@
 #include <bitset>
 #define NB_PAIRS 16 // TODO: compilation option
 
-using std::vector;
-
 class vpBrief {
     public :
         vpBrief(int nb_pairs=128, int patch_size=10); // Refactor nb_pairs = sizeof(type[n])
-        std::bitset<NB_PAIRS> * compute(const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints); // TODO Refactor take into account user defined nb_pairs (see boost, bitmagic)
+        std::vector<std::bitset<NB_PAIRS> *> * computeDescriptors(const vpImage<unsigned char> & image, const std::vector<vpImagePoint> & keypoints); // TODO Refactor take into account user defined nb_pairs (see boost, bitmagic)
         ~vpBrief();
 
     private :
@@ -27,7 +25,7 @@ class vpBrief {
         const int nb_pairs;
         int patch_size;
         //const std::size_t N;
-        void descriptorBit(const vpImage<unsigned char> & image, std::bitset<NB_PAIRS> & descriptor, vector<vpImagePoint>::const_iterator & it, int * pairs, int i);
+        void descriptorBit(const vpImage<unsigned char> & image, std::bitset<NB_PAIRS> & descriptor, std::vector<vpImagePoint>::const_iterator & it, int * pairs, int i);
 };
 
 #endif /* __VPBRIEF_H__ */
