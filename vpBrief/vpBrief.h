@@ -18,7 +18,7 @@ class vpBrief {
     public :
         vpBrief(int nb_pairs=NB_PAIRS, int patch_size=10); // Refactor nb_pairs = sizeof(type[n])
         std::vector<std::bitset<NB_PAIRS> *> * computeDescriptors(const vpImage<unsigned char> & image, const std::vector<vpImagePoint> & keypoints); 
-        void computeDescriptors(std::vector<std::bitset<NB_PAIRS> *> & descriptors, const vpImage<unsigned char> & image, const std::vector<vpImagePoint> & keypoints); // TODO Refactor take into account user defined nb_pairs (see boost, bitmagic)
+        void computeDescriptors(std::vector<std::bitset<NB_PAIRS> *> & descriptors, std::vector<int> & descriptors_state, const vpImage<unsigned char> & image, const std::vector<vpImagePoint> & keypoints); // TODO Refactor take into account user defined nb_pairs (see boost, bitmagic)
 
         ~vpBrief();
 

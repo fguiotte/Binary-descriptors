@@ -41,20 +41,24 @@ void vpBrief::descriptorBit(const vpImage<unsigned char> & image, std::bitset<NB
     descriptor[0] = res;
 }
 
-void vpBrief::computeDescriptors(std::vector<std::bitset<NB_PAIRS> *> & descriptors, const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
+void vpBrief::computeDescriptors(std::vector<std::bitset<NB_PAIRS> *> & descriptors, std::vector<int> & descriptors_state, const vpImage<unsigned char> & image, const vector<vpImagePoint> & keypoints) { 
     for (vector<vpImagePoint>::const_iterator it = keypoints.begin(); it!=keypoints.end(); it++) {
         std::bitset<NB_PAIRS> * newDescriptor = new std::bitset<NB_PAIRS>;
-        *newDescriptor = 0;
         if (it->get_u() > patch_size && it->get_u() < image.getHeight() - patch_size && it->get_v() > patch_size && it->get_v() < image.getWidth() - patch_size) { // Border conditions; please refactor
             for (int i=0; i<nb_pairs-1; i++) {
                 descriptorBit(image, *newDescriptor, it, pairs, i);
                 *newDescriptor <<= 1;
             }
             descriptorBit(image, *newDescriptor, it, pairs, nb_pairs-1);
+            descriptors_state.push_back(1);
+        } else {
+            descriptors_state.push_back(0);
         }
         descriptors.push_back(newDescriptor);
     }
 }
+
+//void vpBrief::match(const vpImage
 
 vpBrief::~vpBrief() {
     delete[] pairs;

@@ -31,9 +31,12 @@ int main( int argc, char* argv[] )
     //long int * tmp[2];
     std::cout<<sizeof(unsigned long)<<std::endl;
     vector<std::bitset<NB_PAIRS> *> descriptors;
-    brief.computeDescriptors(descriptors, img, keypoints);
-    for (int i=0; i<descriptors.size(); i++)
+    vector<int> descriptors_state;
+    brief.computeDescriptors(descriptors, descriptors_state, img, keypoints);
+    for (int i=0; i<descriptors.size(); i++) {
         std::cout<<*descriptors[i]<<std::endl;
+        std::cout<<descriptors_state[i]<<std::endl;
+    }
 
 	vpDisplayX d(img);
 	vpDisplay::display(img);
