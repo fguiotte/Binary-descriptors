@@ -127,7 +127,7 @@ vpMatrix ransac_homography(const vector<vpImagePoint> & p1, const vector<vpImage
         int score = 0;
         for (int i = 0; i < p1.size(); i++ ) {
             vpImagePoint point_1_computed = point_by_homography(H12, p2[i]);
-            if (std::abs(p1[i].get_u() - point_1_computed.get_u()) < epsilon) score ++;
+            if (p1[i].distance(p1[i], point_1_computed) < epsilon) score ++;
         }
 
         if (score > best_score) {
@@ -135,17 +135,17 @@ vpMatrix ransac_homography(const vector<vpImagePoint> & p1, const vector<vpImage
             best_score = score;
         }
     }
+    std::cout<<"Best Score : " <<best_score<<std::endl;
     return best_homo;
 }
 
-void ransac_full(const vector<vpImagePoint> & p1, const vector<vpImagePoint> & p2, vector<vpImagePoint> & p1_correct, vector<vpImagePoint> & p2_correct, int nb_try, int nb_points_h, float epsilon) {
+void ransac_full(const vector<vpImagePoint> & p1, const vector<vpImagePoint> & p2, vector<int> & descriptors_state, int nb_try, int nb_points_h, float epsilon) {
     vpMatrix best_homo = ransac_homography(p1, p2, nb_try, nb_points_h, epsilon);
 
     for (int i = 0; i < p1.size(); i++) {
         vpImagePoint point_1_computed = point_by_homography(best_homo, p2[i]);
-        if (std::abs(p1[i].get_u() - point_1_computed.get_u()) < epsilon) {
-            p1_correct.push_back(p1[i]);
-            p2_correct.push_back(p2[i]);
-        }
+        if (p1[i].distance(p1[i], point_1_computed) < epsilon)
+            descriptors_state[i] = 3;
+        //std::cout<<"State Score : " <<p1[i]<<" -> "<<point_1_computed<<" : "<<p1[i].distance(p1[i], point_1_computed)<<std::endl;
     }
 }

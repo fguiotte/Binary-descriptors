@@ -19,7 +19,7 @@ void make_my_points_array(const std::vector<int> & indexes, const std::vector<vp
 void pointToM(const vpImagePoint & point, vpColVector & pointm);
 void MtoPoint(const vpColVector & pointm, vpImagePoint & point);
 vpImagePoint point_by_homography(const vpMatrix & H, const vpImagePoint & p1);
-vpMatrix ransac_homography(const std::vector<vpImagePoint> & p1, const std::vector<vpImagePoint> & p2, int nb_try = 100, int nb_points_h = 5, float epsilon = 3);
-void ransac_full(const std::vector<vpImagePoint> & p1, const std::vector<vpImagePoint> & p2, std::vector<vpImagePoint> & p1_correct, std::vector<vpImagePoint> & p2_correct, int nb_try = 100, int nb_points_h = 5, float epsilon = 3);
+vpMatrix ransac_homography(const std::vector<vpImagePoint> & p1, const std::vector<vpImagePoint> & p2, int nb_try = 100, int nb_points_h = 5, float epsilon = 15);
+void ransac_full(const std::vector<vpImagePoint> & p1, const std::vector<vpImagePoint> & p2, std::vector<int> & descriptors_state, int nb_try = 100, int nb_points_h = 5, float epsilon = 15);
 
 #endif /* __RANSAC_H__ */

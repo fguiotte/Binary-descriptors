@@ -13,6 +13,7 @@
 #include <visp/vpDisplayX.h>
 #include "vpBrief.h"
 #include "function_opencv.h"
+#include "ransac.h"
 
 using std::rand;
 using std::vector;
@@ -29,6 +30,12 @@ using std::vector;
 //   <----------->                                
 //    first pair                                  
 //   
+//                  --- descriptors_state[] ---               
+//   TODO: REFACTOR STATE DESCRIPTION
+//   0 = Not computed
+//   1 = Computed
+//   2 = Matched
+//   3 = Ransac verified
 
 vpBrief::vpBrief(int nb_pairs, int patch_size) : nb_pairs(nb_pairs), patch_size(patch_size) {
     pairs = new int[nb_pairs*4];
@@ -67,12 +74,11 @@ int vpBrief::hamming_distance(const std::bitset<VPBRIEF_NB_PAIRS> & first, const
     return xor_val.count();
 }
 
-void vpBrief::match(vector<int> & similarity, const vpImage<unsigned char> & first_image, const vector<vpImagePoint> & first_keypoints, const vpImage<unsigned char> & second_image, const vector<vpImagePoint> & second_keypoints) {
+void vpBrief::match(vector<int> & similarity, const vpImage<unsigned char> & first_image, const vector<vpImagePoint> & first_keypoints, const vpImage<unsigned char> & second_image, const vector<vpImagePoint> & second_keypoints, vector<int> & first_descriptors_state, vector<int> & second_descriptors_state) {
     vector<std::bitset<VPBRIEF_NB_PAIRS> *> first_descriptors;
     vector<std::bitset<VPBRIEF_NB_PAIRS> *> second_descriptors;
-    vector<int> first_descriptors_state;
-    vector<int> second_descriptors_state;
-    //vector<int> similarity; // Refactor ?
+//    vector<int> first_descriptors_state;
+//    vector<int> second_descriptors_state;
 
     computeDescriptors(first_descriptors, first_descriptors_state, first_image, first_keypoints);
     computeDescriptors(second_descriptors, second_descriptors_state, second_image, second_keypoints);
@@ -94,7 +100,7 @@ void vpBrief::match(vector<int> & similarity, const vpImage<unsigned char> & fir
                 distance_min = distance;
             }
         }
-        first_descriptors_state[first_i] = second_descriptors_state[second_i_min] = 3;
+        first_descriptors_state[first_i] = second_descriptors_state[second_i_min] = 2;
         similarity.push_back(second_i_min);
     }
 }
@@ -103,6 +109,7 @@ void vpBrief::showMatching(const vpImage<unsigned char> & first_image, const vpI
 }
 
 void vpBrief::demo(const std::string & first_image_str, const std::string & second_image_str) {
+    double t0= vpTime::measureTimeMs();
 	vector<vpImagePoint> first_keypoints = getKeypointsFromOpenCV(first_image_str, 30);
 	vector<vpImagePoint> second_keypoints = getKeypointsFromOpenCV(second_image_str, 30);
     std::cout<<"Keypoints in first image : "<<first_keypoints.size()<<std::endl<<"Keypoints in second image : "<<second_keypoints.size()<<std::endl;
@@ -120,20 +127,30 @@ void vpBrief::demo(const std::string & first_image_str, const std::string & seco
         for (int j = 0; j < second_image.getWidth(); j++)
             demo_image[i][first_image.getWidth() + j] = second_image[i][j];
 
-    vector<int> similarity;
-    match(similarity, first_image, first_keypoints, second_image, second_keypoints);
+    vector<int> similarity, first_descriptors_state, second_descriptors_state;
+    match(similarity, first_image, first_keypoints, second_image, second_keypoints, first_descriptors_state, second_descriptors_state);
+    ransac_full(first_keypoints, second_keypoints, first_descriptors_state,50,5,30);//, 1000, 5, 100); 
+    double t1= vpTime::measureTimeMs();
+    std::cout<<t1-t0<<" ms"<<std::endl;
 
 	vpDisplayX d(demo_image);
 	vpDisplay::display(demo_image);
 
     for (int i = 0; i < similarity.size(); i++) {
-        if (similarity[i] == -1) 
-            vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::red);
-
-        else {
+        if (first_descriptors_state[i] == 0) 
+            vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::yellow);
+        else if (first_descriptors_state[i] == 1)
+            vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::blue);
+        else if (second_descriptors_state[i] == 0)
+            vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::orange);
+        else if (first_descriptors_state[i] == 2) {
             vpImagePoint demo_image_second_point(second_keypoints[similarity[i]].get_i(), second_keypoints[similarity[i]].get_j() + first_image.getWidth());
-            //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::lightGreen);
-            vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
+            //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::red);
+            //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
+        } else if (first_descriptors_state[i] == 3) {
+            vpImagePoint demo_image_second_point(second_keypoints[similarity[i]].get_i(), second_keypoints[similarity[i]].get_j() + first_image.getWidth());
+            //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
+            vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::lightGreen);
         }
     }
 
