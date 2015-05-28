@@ -4,7 +4,7 @@
 #include <visp/vpImage.h>
 #include <visp/vpImageIo.h>
 #include <visp/vpDisplayX.h>
-#include "vpGetKeypointFast.h"
+#include "vpGetKeypointsFast.h"
 #include <visp/vpImageFilter.h>
 #include <visp/vpImageConvert.h>
 

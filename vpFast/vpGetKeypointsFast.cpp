@@ -1,4 +1,4 @@
-#include "vpGetKeypointFast.h"
+#include "vpGetKeypointsFast.h"
 #include <visp/vpImageFilter.h>
 
 double harrisCornerness(vpImage<unsigned char> &img, vpImagePoint pt)
