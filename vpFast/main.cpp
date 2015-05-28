@@ -25,9 +25,8 @@ void color_keypoints(vpImage<vpRGBa> & imgSource, const int threshold = 30)
 	vpImageFilter::gaussianBlur(imgChar, imgfloutee);
 	vpImageConvert::convert(imgfloutee, imgChar);
 	
-	// récupération des points d'intérèts dans un vecteur
-	vector<vpImagePoint> keypoints = vpGetKeypointFromFast(imgChar, threshold);
-
+	// récupération des points d'intérèts dans un vecteur	
+	vector<vpImagePoint> keypoints = vpGetKeypointsFromFast(imgChar, threshold, 50);
 
 	// afficher les points caractéristiques en crois rouge
 	for(size_t i = 0; i < keypoints.size(); i++)
@@ -49,8 +48,8 @@ void char_keypoints(vpImage<unsigned char> & imgSource, vpImage<vpRGBa> & imgCol
 	vpImageFilter::gaussianBlur(imgSource, imgfloutee);
 	vpImageConvert::convert(imgfloutee, imgSource);
 	
-	// récupération des points d'intérèts dans un vecteur
-	vector<vpImagePoint> keypoints = vpGetKeypointFromFast(imgSource, threshold);
+	// récupération des points d'intérèts dans un vecteur	
+	vector<vpImagePoint> keypoints = vpGetKeypointsFromFast(imgSource, threshold, 50);
 
 	// afficher les points caractéristiques en crois rouge
 	vpImageConvert::convert(imgSource, imgColor);
