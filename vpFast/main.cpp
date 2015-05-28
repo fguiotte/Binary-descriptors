@@ -13,14 +13,15 @@
 
 using namespace std;
 
-void color_keypoints(vpImage<vpRGBa> & imgSource, const int threshold = 30) {
+void color_keypoints(vpImage<vpRGBa> & imgSource, const int threshold = 30)
+{
 
-    // convertir l'image vpRGBa en unsigned char
-    vpImage<unsigned char> imgChar;
-    vpImageConvert::convert(imgSource, imgChar);
+  // convertir l'image vpRGBa en unsigned char
+  vpImage<unsigned char> imgChar;
+  vpImageConvert::convert(imgSource, imgChar);
     
-    // flouter l'image de source pour réduire du bruit
-    vpImage<double> imgfloutee;
+  // flouter l'image de source pour réduire du bruit
+  vpImage<double> imgfloutee;
 	vpImageFilter::gaussianBlur(imgChar, imgfloutee);
 	vpImageConvert::convert(imgfloutee, imgChar);
 	
@@ -43,8 +44,8 @@ void color_keypoints(vpImage<vpRGBa> & imgSource, const int threshold = 30) {
 
 void char_keypoints(vpImage<unsigned char> & imgSource, vpImage<vpRGBa> & imgColor, const int threshold = 30) {
     
-    // flouter l'image de source pour réduire du bruit
-    vpImage<double> imgfloutee;
+  // flouter l'image de source pour réduire du bruit
+  vpImage<double> imgfloutee;
 	vpImageFilter::gaussianBlur(imgSource, imgfloutee);
 	vpImageConvert::convert(imgfloutee, imgSource);
 	
@@ -68,38 +69,37 @@ void char_keypoints(vpImage<unsigned char> & imgSource, vpImage<vpRGBa> & imgCol
 
 int main(int argc, char** argv)
 {
-
-    string videoPath = "../images/babypandas.mpg";
+  string videoPath = "../images/babypandas.mpg";
     
-    vpImage<vpRGBa> imgSource;
-    vpVideoReader reader;
-    reader.setFileName(videoPath);
-    reader.open(imgSource);
-    cout<< "video name : "<< videoPath <<endl;
-    cout<< "video framerate : "<< reader.getFramerate() << "Hz" <<endl;
-    cout<< "video dimension : "<< imgSource.getWidth() << " " << imgSource.getHeight()<<endl;
+  vpImage<vpRGBa> imgSource;
+  vpVideoReader reader;
+  reader.setFileName(videoPath);
+  reader.open(imgSource);
+  cout<< "video name : "<< videoPath <<endl;
+  cout<< "video framerate : "<< reader.getFramerate() << "Hz" <<endl;
+  cout<< "video dimension : "<< imgSource.getWidth() << " " << imgSource.getHeight()<<endl;
     
-    vpDisplayX dv(imgSource);
-    vpDisplay::setTitle(imgSource, "Video reader");
-    double playSpeed = 2000.0;
-    while( true ) {
+  vpDisplayX dv(imgSource);
+  vpDisplay::setTitle(imgSource, "Video reader");
+  double playSpeed = 2000.0;
+  while( true )
+	{
     
-        double t = vpTime::measureTimeMs();
+    double t = vpTime::measureTimeMs();
         
-        reader.acquire(imgSource);
+    reader.acquire(imgSource);
         
-        color_keypoints(imgSource);
+    color_keypoints(imgSource);
         
-	    vpDisplay::display(imgSource);
-	    vpDisplay::flush(imgSource);
-	    if ( vpDisplay::getClick(imgSource, false) ) { break; }
-	    vpTime::wait(t, playSpeed /reader.getFramerate());
-     
-    }
-    reader.close();
+		vpDisplay::display(imgSource);
+	  vpDisplay::flush(imgSource);
+	  if(vpDisplay::getClick(imgSource, false)) { break; }
+	  vpTime::wait(t, playSpeed /reader.getFramerate());
+	}
+  reader.close();
     
     
-    /*
+  /*
 	string imagePath = "../images/img1.ppm";
 	vpImage<vpRGBa> imgColor;
 	vpImage<unsigned char> imgSource;

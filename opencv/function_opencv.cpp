@@ -1,6 +1,6 @@
 #include "function_opencv.h"
 
-vector<vpImagePoint> getKeypointsFromOpenCV(string imagePath,int  threshold)
+vector<vpImagePoint> getKeypointsFromOpenCV(string imagePath, int threshold)
 {
 	// Iniatialisation de l'image en OpenCV
 	cv::Mat image = cv::imread(imagePath);

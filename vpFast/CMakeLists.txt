@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(BinaryDescriptors)
+project(vpFast)
 
 find_package (VISP REQUIRED)
 
