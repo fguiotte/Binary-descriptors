@@ -21,7 +21,8 @@ class vpBrief {
         void computeDescriptors(std::vector<std::bitset<VPBRIEF_NB_PAIRS> *> & descriptors, std::vector<int> & descriptors_state, const vpImage<unsigned char> & image, const std::vector<vpImagePoint> & keypoints); // TODO Refactor take into account user defined nb_pairs (see boost, bitmagic)
         void match(std::vector<int> & similarity, const vpImage<unsigned char> & first_image, const std::vector<vpImagePoint> & first_keypoints, const vpImage<unsigned char> & second_image, const std::vector<vpImagePoint> & second_keypoints, std::vector<int> & first_descriptors_state, std::vector<int> & second_descriptors_state);
         void showMatching(const vpImage<unsigned char> & first_image, const vpImage<unsigned char> & second_image);
-        void demo(const std::string & first_image_str, const std::string & second_image_str);
+        //void demo(const std::string & first_image_str, const std::string & second_image_str);
+        void demo(const vpImage<unsigned char> & first_image, const vpImage<unsigned char> & second_image);
         void demo_video(const std::string & videoPath);
 
         ~vpBrief();

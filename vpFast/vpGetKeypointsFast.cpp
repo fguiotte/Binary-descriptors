@@ -1,7 +1,7 @@
 #include "vpGetKeypointsFast.h"
 #include <visp/vpImageFilter.h>
 
-double harrisCornerness(vpImage<unsigned char> &img, vpImagePoint pt)
+double harrisCornerness(const vpImage<unsigned char> &img, vpImagePoint pt)
 {
 	double grad_x, grad_y;
 	vpMatrix A(2,2);
@@ -23,7 +23,7 @@ double harrisCornerness(vpImage<unsigned char> &img, vpImagePoint pt)
 
 }
 
-vector<vpImagePoint> vpGetKeypointsFromFast(vpImage<unsigned char> &img, int threshold, int nbKeypoints)
+vector<vpImagePoint> vpGetKeypointsFromFast(const vpImage<unsigned char> &img, int threshold, int nbKeypoints)
 {
 	bool kp;
 	double harris;

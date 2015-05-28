@@ -15,6 +15,8 @@
 #include "function_opencv.h"
 #include "ransac.h"
 #include <visp/vpVideoReader.h>
+#include "../vpFast/vpGetKeypointsFast.h"
+#include "../vpFast/vpFast.h"
 
 using std::rand;
 using std::vector;
@@ -110,16 +112,19 @@ void vpBrief::showMatching(const vpImage<unsigned char> & first_image, const vpI
 }
 
 
-void vpBrief::demo(const std::string & first_image_str, const std::string & second_image_str) {
+//void vpBrief::demo(const std::string & first_image_str, const std::string & second_image_str) {
+void vpBrief::demo(const vpImage<unsigned char> & first_image, const vpImage<unsigned char> & second_image) {
     double t0= vpTime::measureTimeMs();
-	vector<vpImagePoint> first_keypoints = getKeypointsFromOpenCV(first_image_str, 30);
-	vector<vpImagePoint> second_keypoints = getKeypointsFromOpenCV(second_image_str, 30);
+	vector<vpImagePoint> first_keypoints = vpGetKeypointsFromFast(first_image, 30, 50);
+	vector<vpImagePoint> second_keypoints = vpGetKeypointsFromFast(second_image, 30, 50);
+	//vector<vpImagePoint> first_keypoints = getKeypointsFromOpenCV(first_image_str, 30);
+	//vector<vpImagePoint> second_keypoints = getKeypointsFromOpenCV(second_image_str, 30);
     std::cout<<"Keypoints in first image : "<<first_keypoints.size()<<std::endl<<"Keypoints in second image : "<<second_keypoints.size()<<std::endl;
 
-    vpImage<unsigned char> first_image;
-    vpImage<unsigned char> second_image;
-	vpImageIo::read(first_image, first_image_str);
-	vpImageIo::read(second_image, second_image_str);
+//    vpImage<unsigned char> first_image;
+//    vpImage<unsigned char> second_image;
+//	vpImageIo::read(first_image, first_image_str);
+//	vpImageIo::read(second_image, second_image_str);
 
     vpImage<unsigned char> demo_image(max(first_image.getHeight(), second_image.getHeight()), second_image.getWidth() + second_image.getWidth());
     for (int i = 0; i < first_image.getHeight(); i++) 
@@ -159,37 +164,10 @@ void vpBrief::demo(const std::string & first_image_str, const std::string & seco
 	vpDisplay::flush(demo_image);
 	vpDisplay::getClick(demo_image);
 
+    /*
     string videoPath = "./ksp.mpg";
 
     vpImage<unsigned char> imgSource;
-    vpVideoReader reader;
-    reader.setFileName(videoPath);
-    reader.open(imgSource);
-    cout<< "video name : "<< videoPath <<endl;
-    //cout<< "video framerate : "<< reader.getFramerate() << "Hz" <<endl;
-    cout<< "video dimension : "<< imgSource.getWidth() << " " << imgSource.getHeight()<<endl;
-    
-    vpDisplayX dv(imgSource);
-    vpDisplay::setTitle(imgSource, "Video reader");
-    double playSpeed = 1000.0;
-
-    while( true ) {
-        double t = vpTime::measureTimeMs();
-            
-        reader.acquire(imgSource);
-            
-        vpDisplay::display(imgSource);
-        vpDisplay::flush(imgSource);
-        if(vpDisplay::getClick(imgSource, false)) { break; }
-        //vpTime::wait(t, playSpeed /reader.getFramerate());
-    }
-    reader.close();
-
-}
-
-void vpBrief::demo_video(const std::string & videoPath) {
-    /*
-    vpImage<vpRGBa> first_image, imgSource;
     vpVideoReader reader;
     reader.setFileName(videoPath);
     reader.open(imgSource);
@@ -199,61 +177,13 @@ void vpBrief::demo_video(const std::string & videoPath) {
     
     vpDisplayX dv(imgSource);
     vpDisplay::setTitle(imgSource, "Video reader");
-    double playSpeed = 1000.0;
-    reader.acquire(imgSource);
+    double playSpeed = 500.0;
 
     while( true ) {
         double t = vpTime::measureTimeMs();
             
         reader.acquire(imgSource);
             
-    double t0= vpTime::measureTimeMs();
-	vector<vpImagePoint> first_keypoints = getKeypointsFromOpenCV(first_image_str, 30);
-	vector<vpImagePoint> second_keypoints = getKeypointsFromOpenCV(second_image_str, 30);
-    std::cout<<"Keypoints in first image : "<<first_keypoints.size()<<std::endl<<"Keypoints in second image : "<<second_keypoints.size()<<std::endl;
-
-    vpImage<unsigned char> first_image;
-    vpImage<unsigned char> second_image;
-	vpImageIo::read(first_image, first_image_str);
-	vpImageIo::read(second_image, second_image_str);
-
-    vpImage<unsigned char> demo_image(max(first_image.getHeight(), second_image.getHeight()), second_image.getWidth() + second_image.getWidth());
-    for (int i = 0; i < first_image.getHeight(); i++) 
-        for (int j = 0; j < first_image.getWidth(); j++)
-            demo_image[i][j] = first_image[i][j];
-    for (int i = 0; i < second_image.getHeight(); i++) 
-        for (int j = 0; j < second_image.getWidth(); j++)
-            demo_image[i][first_image.getWidth() + j] = second_image[i][j];
-
-    vector<int> similarity, first_descriptors_state, second_descriptors_state;
-    match(similarity, first_image, first_keypoints, second_image, second_keypoints, first_descriptors_state, second_descriptors_state);
-    ransac_full(first_keypoints, second_keypoints, first_descriptors_state,500,5,3);//, 1000, 5, 100); 
-    double t1= vpTime::measureTimeMs();
-    std::cout<<t1-t0<<" ms"<<std::endl;
-
-	vpDisplayX d(demo_image);
-	vpDisplay::display(demo_image);
-
-    for (int i = 0; i < similarity.size(); i++) {
-        if (first_descriptors_state[i] == 0) 
-            vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::yellow);
-        else if (first_descriptors_state[i] == 1)
-            vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::blue);
-        else if (second_descriptors_state[i] == 0)
-            vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::orange);
-        else if (first_descriptors_state[i] == 2) {
-            vpImagePoint demo_image_second_point(second_keypoints[similarity[i]].get_i(), second_keypoints[similarity[i]].get_j() + first_image.getWidth());
-            vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::red);
-            //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
-        } else if (first_descriptors_state[i] == 3) {
-            vpImagePoint demo_image_second_point(second_keypoints[similarity[i]].get_i(), second_keypoints[similarity[i]].get_j() + first_image.getWidth());
-            //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
-            vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::lightGreen);
-        }
-    }
-
-
-
         vpDisplay::display(imgSource);
         vpDisplay::flush(imgSource);
         if(vpDisplay::getClick(imgSource, false)) { break; }
@@ -261,6 +191,77 @@ void vpBrief::demo_video(const std::string & videoPath) {
     }
     reader.close();
     */
+
+}
+
+void vpBrief::demo_video(const std::string & videoPath) {
+    vpImage<unsigned char> first_image, second_image;
+    vpVideoReader reader;
+    reader.setFileName(videoPath);
+    reader.open(second_image);
+    cout<< "video name : "<< videoPath <<endl;
+    cout<< "video framerate : "<< reader.getFramerate() << "Hz" <<endl;
+    cout<< "video dimension : "<< second_image.getWidth() << " " << second_image.getHeight()<<endl;
+    
+    vpDisplayX dv(second_image);
+    vpDisplay::setTitle(second_image, "Video reader");
+    double playSpeed = 1000.0;
+    reader.acquire(second_image);
+
+    first_image = second_image;
+	vector<vpImagePoint> first_keypoints = vpGetKeypointsFromFast(first_image, 10, 150);
+
+    vpImage<unsigned char> demo_image(max(first_image.getHeight(), second_image.getHeight()), second_image.getWidth() + second_image.getWidth());
+	vpDisplayX d(demo_image);
+	vpDisplay::display(demo_image);
+    while( true ) {
+        double t = vpTime::measureTimeMs();
+            
+        reader.acquire(second_image);
+            
+        double t0= vpTime::measureTimeMs();
+        vector<vpImagePoint> second_keypoints = vpGetKeypointsFromFast(second_image, 10, 150);
+
+        for (int i = 0; i < first_image.getHeight(); i++) 
+            for (int j = 0; j < first_image.getWidth(); j++)
+                demo_image[i][j] = first_image[i][j];
+        for (int i = 0; i < second_image.getHeight(); i++) 
+            for (int j = 0; j < second_image.getWidth(); j++)
+                demo_image[i][first_image.getWidth() + j] = second_image[i][j];
+
+        vector<int> similarity, first_descriptors_state, second_descriptors_state;
+        match(similarity, first_image, first_keypoints, second_image, second_keypoints, first_descriptors_state, second_descriptors_state);
+        ransac_full(first_keypoints, second_keypoints, first_descriptors_state,50,5,3);//, 1000, 5, 100); 
+        double t1= vpTime::measureTimeMs();
+        std::cout<<t1-t0<<" ms"<<std::endl;
+
+
+        vpDisplay::display(demo_image);
+        for (int i = 0; i < similarity.size(); i++) {
+            if (first_descriptors_state[i] == 0) 
+                vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::yellow);
+            else if (first_descriptors_state[i] == 1)
+                vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::blue);
+            else if (second_descriptors_state[i] == 0)
+                vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::orange);
+            else if (first_descriptors_state[i] == 2) {
+                vpImagePoint demo_image_second_point(second_keypoints[similarity[i]].get_i(), second_keypoints[similarity[i]].get_j() + first_image.getWidth());
+                vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::red);
+                //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
+            } else if (first_descriptors_state[i] == 3) {
+                vpImagePoint demo_image_second_point(second_keypoints[similarity[i]].get_i(), second_keypoints[similarity[i]].get_j() + first_image.getWidth());
+                //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
+                vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::lightGreen);
+            }
+        }
+
+
+
+        vpDisplay::flush(demo_image);
+        if(vpDisplay::getClick(demo_image, false)) { break; }
+        vpTime::wait(t, playSpeed /reader.getFramerate());
+    }
+    reader.close();
 }
 
 vpBrief::~vpBrief() {

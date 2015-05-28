@@ -76,7 +76,7 @@ int main(int argc, char** argv)
   reader.setFileName(videoPath);
   reader.open(imgSource);
   cout<< "video name : "<< videoPath <<endl;
-  //cout<< "video framerate : "<< reader.getFramerate() << "Hz" <<endl;
+  cout<< "video framerate : "<< reader.getFramerate() << "Hz" <<endl;
   cout<< "video dimension : "<< imgSource.getWidth() << " " << imgSource.getHeight()<<endl;
     
   vpDisplayX dv(imgSource);
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 		vpDisplay::display(imgSource);
 	  vpDisplay::flush(imgSource);
 	  if(vpDisplay::getClick(imgSource, false)) { break; }
-//	  vpTime::wait(t, playSpeed /reader.getFramerate());
+	  vpTime::wait(t, playSpeed /reader.getFramerate());
 	}
   reader.close();
     

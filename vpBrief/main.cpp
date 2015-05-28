@@ -20,16 +20,17 @@ int main( int argc, char* argv[] )
 
 
     vpImage<unsigned char> img;
-    string adresse_image("lena.pgm");
-    string adresse_image2("lena2.pgm");
-	vpImageIo::read(img, adresse_image);
-	vector<vpImagePoint> keypoints = getKeypointsFromOpenCV(adresse_image, 30);
+    string first_image_str("lena.pgm");
+    string second_image_str("lena2.pgm");
 
     vpBrief brief;
 
-    std::cout<<"Keypoints : "<<keypoints.size()<<std::endl;
-
-    brief.demo(adresse_image, adresse_image2);
+    vpImage<unsigned char> first_image;
+    vpImage<unsigned char> second_image;
+	vpImageIo::read(first_image, first_image_str);
+	vpImageIo::read(second_image, second_image_str);
+    brief.demo(first_image, second_image);
+    brief.demo_video("./ksp_mini.mpg");
 
     /*
     //long int * tmp[2];

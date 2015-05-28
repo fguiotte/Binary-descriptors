@@ -10,11 +10,15 @@ set(${PROJECT_NAME}_CPP
   vpBrief.cpp
   function_opencv.cpp
   ransac.cpp
+  ../vpFast/vpGetKeypointsFast.cpp
+  ../vpFast/vpFast.cpp
 )
 set(${PROJET_NAME}_H
     vpBrief.h
     function_opencv.h
     ransac.h
+  ../vpFast/vpGetKeypointsFast.h
+  ../vpFast/vpFast.h
 )
 
 add_executable(${PROJECT_NAME}

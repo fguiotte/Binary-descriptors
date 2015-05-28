@@ -6,4 +6,4 @@
 
 using namespace std;
 
-bool vpFast(vpImage<unsigned char> &img, int i,int j, int threshold);
+bool vpFast(const vpImage<unsigned char> &img, int i,int j, int threshold);
