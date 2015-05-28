@@ -25,8 +25,9 @@ void color_keypoints(vpImage<vpRGBa> & imgSource, const int threshold = 30)
 	vpImageFilter::gaussianBlur(imgChar, imgfloutee);
 	vpImageConvert::convert(imgfloutee, imgChar);
 	
-	// récupération des points d'intérèts dans un vecteur	
-	vector<vpImagePoint> keypoints = vpGetKeypointsFromFast(imgChar, threshold, 50);
+	// récupération des points d'intérèts dans un vecteur
+	vector<vpImagePoint> keypoints = vpGetKeypointFromFast(imgChar, threshold);
+
 
 	// afficher les points caractéristiques en crois rouge
 	for(size_t i = 0; i < keypoints.size(); i++)
@@ -48,8 +49,8 @@ void char_keypoints(vpImage<unsigned char> & imgSource, vpImage<vpRGBa> & imgCol
 	vpImageFilter::gaussianBlur(imgSource, imgfloutee);
 	vpImageConvert::convert(imgfloutee, imgSource);
 	
-	// récupération des points d'intérèts dans un vecteur	
-	vector<vpImagePoint> keypoints = vpGetKeypointsFromFast(imgSource, threshold, 50);
+	// récupération des points d'intérèts dans un vecteur
+	vector<vpImagePoint> keypoints = vpGetKeypointFromFast(imgSource, threshold);
 
 	// afficher les points caractéristiques en crois rouge
 	vpImageConvert::convert(imgSource, imgColor);
@@ -75,7 +76,7 @@ int main(int argc, char** argv)
   reader.setFileName(videoPath);
   reader.open(imgSource);
   cout<< "video name : "<< videoPath <<endl;
-  cout<< "video framerate : "<< reader.getFramerate() << "Hz" <<endl;
+  //cout<< "video framerate : "<< reader.getFramerate() << "Hz" <<endl;
   cout<< "video dimension : "<< imgSource.getWidth() << " " << imgSource.getHeight()<<endl;
     
   vpDisplayX dv(imgSource);
@@ -93,7 +94,7 @@ int main(int argc, char** argv)
 		vpDisplay::display(imgSource);
 	  vpDisplay::flush(imgSource);
 	  if(vpDisplay::getClick(imgSource, false)) { break; }
-	  vpTime::wait(t, playSpeed /reader.getFramerate());
+//	  vpTime::wait(t, playSpeed /reader.getFramerate());
 	}
   reader.close();
     

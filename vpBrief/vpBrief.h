@@ -22,6 +22,7 @@ class vpBrief {
         void match(std::vector<int> & similarity, const vpImage<unsigned char> & first_image, const std::vector<vpImagePoint> & first_keypoints, const vpImage<unsigned char> & second_image, const std::vector<vpImagePoint> & second_keypoints, std::vector<int> & first_descriptors_state, std::vector<int> & second_descriptors_state);
         void showMatching(const vpImage<unsigned char> & first_image, const vpImage<unsigned char> & second_image);
         void demo(const std::string & first_image_str, const std::string & second_image_str);
+        void demo_video(const std::string & videoPath);
 
         ~vpBrief();
 

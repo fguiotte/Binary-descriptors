@@ -8,6 +8,7 @@
 
 #include "ransac.h"
 #include <visp/vpColVector.h>
+#include <cstdlib>
 
 using std::vector;
 
@@ -70,7 +71,7 @@ void random_my_indexes(std::vector<int> & indexes, int ind_max, int nb_ind) {
         int new_ind;
         bool notOk;
         do {
-        new_ind = rand() % ind_max;
+        new_ind = std::rand() % ind_max;
         notOk = false;
         for (int j = 0; j < i ; j++)
             if (indexes[j] == new_ind) { 
