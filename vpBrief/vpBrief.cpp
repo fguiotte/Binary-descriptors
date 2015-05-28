@@ -212,8 +212,12 @@ void vpBrief::demo_video(const std::string & videoPath) {
 	vector<vpImagePoint> first_keypoints = vpGetKeypointsFromFast(first_image, 10, 150);
 
     vpImage<unsigned char> demo_image(max(first_image.getHeight(), second_image.getHeight()), second_image.getWidth() + second_image.getWidth());
+    vpImage<unsigned char> stat_image(400,800);
 	vpDisplayX d(demo_image);
 	vpDisplay::display(demo_image);
+	vpDisplayX s(stat_image);
+	vpDisplay::display(stat_image);
+    int frame = 0;
     while( true ) {
         double t = vpTime::measureTimeMs();
             
@@ -231,35 +235,49 @@ void vpBrief::demo_video(const std::string & videoPath) {
 
         vector<int> similarity, first_descriptors_state, second_descriptors_state;
         match(similarity, first_image, first_keypoints, second_image, second_keypoints, first_descriptors_state, second_descriptors_state);
-        ransac_full(first_keypoints, second_keypoints, first_descriptors_state,50,5,3);//, 1000, 5, 100); 
+        ransac_full(first_keypoints, second_keypoints, first_descriptors_state,40,5,30);//, 1000, 5, 100); 
         double t1= vpTime::measureTimeMs();
         std::cout<<t1-t0<<" ms"<<std::endl;
 
 
         vpDisplay::display(demo_image);
+        int not_computed = 0, computed = 0, matched = 0, ransac_verified = 0;
+//   0 = Not computed
+//   1 = Computed
+//   2 = Matched
+//   3 = Ransac verified
         for (int i = 0; i < similarity.size(); i++) {
-            if (first_descriptors_state[i] == 0) 
+            if (first_descriptors_state[i] == 0) {
                 vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::yellow);
-            else if (first_descriptors_state[i] == 1)
+                not_computed ++;
+            } else if (first_descriptors_state[i] == 1) {
                 vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::blue);
-            else if (second_descriptors_state[i] == 0)
+                computed ++;
+            } else if (second_descriptors_state[i] == 0) {
                 vpDisplay::displayCross(demo_image, first_keypoints[i], 5, vpColor::orange);
-            else if (first_descriptors_state[i] == 2) {
+            } else if (first_descriptors_state[i] == 2) {
                 vpImagePoint demo_image_second_point(second_keypoints[similarity[i]].get_i(), second_keypoints[similarity[i]].get_j() + first_image.getWidth());
                 vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::red);
                 //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
+                matched ++;
             } else if (first_descriptors_state[i] == 3) {
                 vpImagePoint demo_image_second_point(second_keypoints[similarity[i]].get_i(), second_keypoints[similarity[i]].get_j() + first_image.getWidth());
                 //vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor(rand()%255,rand()%255,rand()%255));
                 vpDisplay::displayLine(demo_image, first_keypoints[i], demo_image_second_point, vpColor::lightGreen);
+                ransac_verified++;
             }
         }
 
 
 
+        vpDisplay::displayCross(stat_image, stat_image.getHeight() - ransac_verified * 10, frame, 5, vpColor::green);
+        vpDisplay::displayCross(stat_image,  stat_image.getHeight() - matched , frame, 5, vpColor::blue);
+        vpDisplay::displayCross(stat_image,  stat_image.getHeight() - (t1-t0) , frame, 5, vpColor::red);
         vpDisplay::flush(demo_image);
+        vpDisplay::flush(stat_image);
         if(vpDisplay::getClick(demo_image, false)) { break; }
         vpTime::wait(t, playSpeed /reader.getFramerate());
+        frame ++;
     }
     reader.close();
 }
